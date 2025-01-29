@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import './App.css'
+import MovieInput from './components/MovieInput/MovieInput.jsx';
+import MovieList from './components/MovieList/MovieList.jsx';
 
 export default function App() {
   const [movies, setMovies] = useState([]);
@@ -28,53 +30,22 @@ export default function App() {
     setEditingIndex(index);
   };
 
+  const handleCancelEditing = () => {
+    setEditingIndex(null)
+    setMovieName("");
+  }
+
   return (
-    <div className="app">
+    <div className="container">
       <h1>Movie Tracker</h1>
-      <div>
-        <input
-          type="text"
-          value={movieName}
-          onChange={(e) => setMovieName(e.target.value)}
-          placeholder="Enter movie name"
-        />
-        <button onClick={handleAddOrEditMovie}>
-          {editingIndex !== null ? "Edit" : "Add"}
-        </button>
-      </div>
-      <ul>
-        {movies.map((movie, index) => (
-          <li key={index}>
-            {movie}
-            <button onClick={() => handleEditMovie(index)}>Edit</button>
-            <button onClick={() => handleDeleteMovie(index)}>Delete</button>
-          </li>
-        ))}
-      </ul>
-      <style>
-        {`
-          .app {
-            text-align: center;
-            font-family: Arial, sans-serif;
-          }
-          input {
-            margin: 5px;
-            padding: 5px;
-          }
-          button {
-            margin: 5px;
-            padding: 5px;
-            cursor: pointer;
-          }
-          ul {
-            list-style-type: none;
-            padding: 0;
-          }
-          li {
-            margin: 10px 0;
-          }
-        `}
-      </style>
+    <MovieInput
+      movieName={movieName}
+      setMovieName={setMovieName}
+      handleAddOrEditMovie={handleAddOrEditMovie}
+      editingIndex={editingIndex}
+      handleCancelEditing={handleCancelEditing}
+    />
+      <MovieList movies={movies} handleEditMovie={handleEditMovie}  handleDeleteMovie={handleDeleteMovie} />
     </div>
   );
 }

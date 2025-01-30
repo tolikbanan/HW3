@@ -12,11 +12,11 @@ export default function App() {
     if (movieName.trim() === "") return;
     if (editingIndex !== null) {
       const updatedMovies = [...movies];
-      updatedMovies[editingIndex] = movieName;
+      updatedMovies[editingIndex].name = movieName;
       setMovies(updatedMovies);
       setEditingIndex(null);
     } else {
-      setMovies([...movies, movieName]);
+      setMovies([...movies, {name: movieName, watched: false}]);
     }
     setMovieName("");
   };
@@ -26,13 +26,19 @@ export default function App() {
   };
 
   const handleEditMovie = (index) => {
-    setMovieName(movies[index]);
+    setMovieName(movies[index].name);
     setEditingIndex(index);
   };
 
   const handleCancelEditing = () => {
     setEditingIndex(null)
     setMovieName("");
+  }
+
+  const toggleWatched = (index) => {
+    const updatedMovies = [...movies]
+    updatedMovies[index].watched = !updatedMovies[index].watched;
+    setMovies(updatedMovies)
   }
 
   return (
@@ -45,7 +51,11 @@ export default function App() {
       editingIndex={editingIndex}
       handleCancelEditing={handleCancelEditing}
     />
-      <MovieList movies={movies} handleEditMovie={handleEditMovie}  handleDeleteMovie={handleDeleteMovie} />
+      <MovieList
+        movies={movies}
+        handleEditMovie={handleEditMovie}  
+        handleDeleteMovie={handleDeleteMovie} 
+        toggleWatched={toggleWatched}/>
     </div>
   );
 }

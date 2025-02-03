@@ -1,12 +1,14 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
 import MovieInput from './components/MovieInput/MovieInput.jsx';
 import MovieList from './components/MovieList/MovieList.jsx';
+import dislikeIcon from './assets/dislike.svg';
 
 export default function App() {
   const [movies, setMovies] = useState([]);
   const [movieName, setMovieName] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
+  const [stateMovie] = useState("");
 
   const handleAddOrEditMovie = () => {
     if (movieName.trim() === "") return;
@@ -16,7 +18,7 @@ export default function App() {
       setMovies(updatedMovies);
       setEditingIndex(null);
     } else {
-      setMovies([...movies, {name: movieName, watched: false}]);
+      setMovies([...movies, {name: movieName, watched: false, likeStatus: null}]);
     }
     setMovieName("");
   };
@@ -31,31 +33,44 @@ export default function App() {
   };
 
   const handleCancelEditing = () => {
-    setEditingIndex(null)
+    setEditingIndex(null);
     setMovieName("");
-  }
+  };
 
   const toggleWatched = (index) => {
-    const updatedMovies = [...movies]
+    const updatedMovies = [...movies];
     updatedMovies[index].watched = !updatedMovies[index].watched;
-    setMovies(updatedMovies)
-  }
+    setMovies(updatedMovies);
+  };
+
+  const handleToggleLike = (index, status) => {
+    setMovies((prevMovies) =>
+      prevMovies.map((movie, i) =>
+        i === index
+          ? { ...movie, likeStatus: movie.likeStatus === status ? null : status }
+          : movie
+      )
+    );
+  };
 
   return (
     <div className="container">
       <h1>Movie Tracker</h1>
-    <MovieInput
-      movieName={movieName}
-      setMovieName={setMovieName}
-      handleAddOrEditMovie={handleAddOrEditMovie}
-      editingIndex={editingIndex}
-      handleCancelEditing={handleCancelEditing}
-    />
+      <MovieInput
+        movieName={movieName}
+        setMovieName={setMovieName}
+        handleAddOrEditMovie={handleAddOrEditMovie}
+        editingIndex={editingIndex}
+        handleCancelEditing={handleCancelEditing}
+      />
       <MovieList
         movies={movies}
-        handleEditMovie={handleEditMovie}  
-        handleDeleteMovie={handleDeleteMovie} 
-        toggleWatched={toggleWatched}/>
+        handleEditMovie={handleEditMovie}
+        handleDeleteMovie={handleDeleteMovie}
+        toggleWatched={toggleWatched}
+        onToggleLike={handleToggleLike}
+        dislikeIcon={dislikeIcon} 
+      />
     </div>
   );
 }

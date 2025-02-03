@@ -1,4 +1,7 @@
-import styles from './styles.module.css'
+import React from "react";
+import styles from "./styles.module.css";
+import LikeDislikeButtons from "../LikeDislikeButtons/LikeDislikeButtons"; 
+
 const MovieList = (props) => {
   return (
     <div className={styles.wrapper}>
@@ -6,12 +9,19 @@ const MovieList = (props) => {
         <div key={index}>
           {`${index + 1}. ${movie.name}`}
           <div className={styles.buttonsWrapper}>
-            <input type={'checkbox'} onChange={() => props.toggleWatched(index)} checked={movie.watched}/>
+            <input type="checkbox" onChange={() => props.toggleWatched(index)} checked={movie.watched} />
             <button className={styles.editButton} onClick={() => props.handleEditMovie(index)}>Edit</button>
             <button className={styles.deleteButton} onClick={() => props.handleDeleteMovie(index)}>Delete</button>
-
-
           </div>
+
+          {movie.watched && (
+            <LikeDislikeButtons
+              likeStatus={movie.likeStatus}
+              onLike={() => props.onToggleLike(index, "like")}
+              onDislike={() => props.onToggleLike(index, "dislike")}
+              dislikeIcon={props.dislikeIcon}
+            />
+          )}
         </div>
       ))}
     </div>
